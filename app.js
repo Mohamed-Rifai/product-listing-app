@@ -2,14 +2,24 @@ import express from 'express';
 import connectDatabase from './config/database.js'
 
 //route
-import route from './routes/route.js'
-
+import categoryRoute from './routes/category.js'
+import productRoute from './routes/product.js'
 
 const app = express();
+
+
+
+//body parsers
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+
+
+
 //database connnection
 connectDatabase()
 
-app.use('/api',route)
+app.use('/api',categoryRoute)
+app.use('/api',productRoute)
 
 
 const PORT =process.env.PORT || 3000
