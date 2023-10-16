@@ -1,20 +1,20 @@
 import Category from '../model/category.js';
 
 export const addCategory = async (req, res) => {
-  const { name } = req.body
+  const  name  = req.body.categoryName
 
   try {
     // Create a top-level category 
     const newCategory = await Category.create({ name, parent: null })
-
+     
     return res.status(201).json(newCategory)
   } catch (err) {
 
-    console.error('Error creating top-level category:', err);
+    console.log('Error creating top-level category:', err);
 
     return res.status(500).json({ error: 'Category creation failed' });
   }
-};
+}; 
 
 export const getMainCategories = async(req,res) => {
 
@@ -28,3 +28,8 @@ export const getMainCategories = async(req,res) => {
         
     }
 } 
+
+export const addSubCategory = (req,res) => {
+
+  console.log(req.body);
+}

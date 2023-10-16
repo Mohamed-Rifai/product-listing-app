@@ -4,7 +4,7 @@ import Product from '../model/product.js'
 export const addProduct = async(req,res) => {
 
     const {name,description,price,category} = req.body
- 
+         console.log(req.body);
 
     try {
        
@@ -26,7 +26,7 @@ export const addProduct = async(req,res) => {
     } catch (err) {
         console.log(err);
     }
-    
+
 
 }
 
@@ -36,7 +36,7 @@ export const getAllProduct = async(req,res) => {
         
     const allProduct = await Product.find()
 
-    res.send(allProduct)
+    res.status(201).json(allProduct)
 
     } catch (err) {
         console.log(err);
