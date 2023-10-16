@@ -24,7 +24,7 @@ export const addProduct = async(req,res) => {
 
 
     } catch (err) {
-        console.log(err);
+        console.log('save product failed:',err);
     }
 
 
@@ -34,9 +34,15 @@ export const getAllProduct = async(req,res) => {
 
     try {
         
-    const allProduct = await Product.find()
-
-    res.status(201).json(allProduct)
+    const allProduct = await Product.find().populate({
+        path: 'category',
+        populate: {
+          path: 'parent',
+          model: 'Category',
+        },
+      });
+      console.log(allProduct);
+    res.status(201).json(allProduct)      
 
     } catch (err) {
         console.log(err);

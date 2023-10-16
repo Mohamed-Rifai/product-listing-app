@@ -1,12 +1,12 @@
 import  express  from "express";
-import { addCategory, addSubCategory, getMainCategories } from "../controllers/category.js";
+import { addCategory, addSubCategory, getAllCategory } from "../controllers/category.js";
 
 const router = express.Router()
 
 //create category
 router.post('/add-category',addCategory)
 //view main categories
-router.get('/get-top-level-category',getMainCategories)
+router.get('/get-all-category',getAllCategory)
 //create subcategory
 router.post('/add-subcategory',addSubCategory)
 

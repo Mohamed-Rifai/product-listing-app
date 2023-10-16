@@ -16,20 +16,32 @@ export const addCategory = async (req, res) => {
   }
 }; 
 
-export const getMainCategories = async(req,res) => {
+export const getAllCategory = async(req,res) => {
 
     //find main categories
     try {
-        const mainCategories = await Category.find({parent:null})
+        const allCategories = await Category.find({}).populate('parent')
         
-        return res.status(201).json(mainCategories)
+        return res.status(201).json(allCategories)
     } catch (err) {
         console.log('Error get main category: ',err);
         
     }
 } 
 
-export const addSubCategory = (req,res) => {
 
-  console.log(req.body);
-}
+
+export const addSubCategory = async (req, res) => {
+  const { subCategoryName, categoryId } = req.body;
+
+  try {
+  
+    // Create the subcategory
+    const newSubCategory = await Category.create({ name: subCategoryName, parent: categoryId });
+      console.log(newSubCategory);
+    return res.status(201).json(newSubCategory);
+  } catch (err) {
+    console.log('Error creating subcategory:', err);
+    return res.status(500).json({ error: 'Subcategory creation failed' });
+  }
+};
