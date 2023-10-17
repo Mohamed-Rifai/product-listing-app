@@ -1,4 +1,54 @@
+import Category from '../model/category.js';
 import Product from '../model/product.js'
+
+
+
+export const getAllProduct = async (req, res) => {
+    try {
+      const products = await Product.find().populate('category');
+      const categories = await Category.find();
+  
+      const mainCategories = categories.filter((category) => !category.parent);
+      const subcategories = categories.filter((category) => category.parent);
+  
+      // Calculate the product counts for main categories
+      const mainCategoriesWithProductCount = mainCategories.map((mainCategory) => {
+        const productCount = products.filter((product) => {
+          return (
+            product.category._id.toString() === mainCategory._id.toString() ||
+            (product.category.parent &&
+              product.category.parent.toString() === mainCategory._id.toString())
+          );
+        }).length;
+  
+        return { ...mainCategory.toObject(), productCount };
+      });
+  
+      // Calculate the product counts for subcategories
+      const subcategoriesWithProductCount = subcategories.map((subcategory) => {
+        const productCount = products.filter(
+          (product) => product.category._id.toString() === subcategory._id.toString()
+        ).length;
+  
+        return { ...subcategory.toObject(), productCount };
+      });
+  
+      const response = {
+        products,
+        mainCategories: mainCategoriesWithProductCount,
+        subcategories: subcategoriesWithProductCount,
+      };
+  
+      res.status(200).json(response);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ error: 'server error' });
+    }
+  };
+  
+
+
+
 
 
 export const addProduct = async(req,res) => {
@@ -30,21 +80,81 @@ export const addProduct = async(req,res) => {
 
 }
 
-export const getAllProduct = async(req,res) => {
 
-    try {
-        
-    const allProduct = await Product.find().populate({
-        path: 'category',
-        populate: {
-          path: 'parent',
-          model: 'Category',
-        },
-      });
-      console.log(allProduct);
-    res.status(201).json(allProduct)      
 
-    } catch (err) {
-        console.log(err);
-    }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// export const getAllProduct = async (req, res) => {
+//     try {
+//       const products = await Product.aggregate([
+//         {
+//           $lookup: {
+//             from: 'categories',
+//             localField: 'category',
+//             foreignField: '_id',
+//             as: 'category',
+//           },
+//         },
+//         {
+//           $unwind: '$category',
+//         },
+//         {
+//           $project: {
+//             _id: 1,
+//             name: 1,
+//             description: 1,
+//             price: 1,
+//             category: '$category',
+//           },
+//         },
+//       ]);
+  
+//       // Group products by the main category (based on parent) and count
+//       const groupedProducts = await Product.aggregate([
+//         {
+//           $group: {
+//             _id: '$category.parent',
+//             count: { $sum: 1 },
+//           },
+//         },
+//       ]);
+  
+//       // Fetch the main categories
+//       const mainCategories = await category.find({ parent: null });
+  
+//       // Create a response object to send to the frontend
+//       const response = {
+//         products,
+//         mainCategories,
+//         groupedProducts,
+//       };
+  
+//       res.status(200).json(response);
+//     } catch (err) {
+//       console.log(err);
+//       res.status(500).json({ error: 'Internal server error' });
+//     }
+//   }
+  
+
+
+
+// populate: {
+//     path: 'parent',
+//     model: 'Category',
+//   },
