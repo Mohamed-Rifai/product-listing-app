@@ -1,5 +1,9 @@
 import Category from '../model/category.js';
 
+
+
+
+
 export const addCategory = async (req, res) => {
   const  name  = req.body.categoryName
 
@@ -20,7 +24,7 @@ export const getAllCategory = async(req,res) => {
 
     //find main categories
     try {
-        const allCategories = await Category.find({}).populate('parent')
+        const allCategories = await Category.find({})
         
         return res.status(201).json(allCategories)
     } catch (err) {

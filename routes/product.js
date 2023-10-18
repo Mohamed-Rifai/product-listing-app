@@ -9,4 +9,4 @@ router.post('/add-product',addProduct)
 //view all products
 router.get('/get-all-products',getAllProduct)
 
-export default router
+export default router   
